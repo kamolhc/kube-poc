@@ -1,0 +1,49 @@
+name: CI/CD
+
+on: push
+
+env:
+  ENV: qa
+  SHORT_NAME: kube-poc-web-qa
+  PROJECT_NAME: kube-poc-web-qa
+  PROJECT_NAME_PRETTY: kube poc web qa
+  AWS_REGION: us-east-1
+  AWS_ECR_REGISTRY: localhost.localstack.cloud:4510
+  AWS_ECR_REPOSITORY: kube-poc
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Git Checkout
+        uses: actions/checkout@v3
+
+#      - name: Configure AWS Credentials
+#        uses: aws-actions/configure-aws-credentials@v1
+#        with:
+#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+        with:
+          driver-opts: network=host
+
+#      - name: Login to Amazon ECR
+#        id: login-ecr
+#        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build and push the Docker image
+        uses: docker/build-push-action@v3
+        with:
+          context: '.'
+          file: './myapp.dockerfile'
+          push: true
+          tags: |
+            ${{ env.AWS_ECR_REGISTRY }}/kube-poc:latest
+            ${{ env.AWS_ECR_REGISTRY }}/kube-poc:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

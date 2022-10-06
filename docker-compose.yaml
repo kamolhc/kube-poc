@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  localstack:
+    image: localstack/localstack:1.1.0
+    ports:
+      - "4566:4566"
+      - "5678:5678"
+      - "4510-4559:4510-4559"
+    environment:
+      - DEBUG=1
+      - DATA_DIR=/tmp/localstack/data
+      - LOCALSTACK_API_KEY=${LOCALSTACK_API_KEY:- }
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "./.localstack:/var/lib/localstack"
+      - "./localstack-setting.sh:/docker-entrypoint-initaws.d/localstack-setting.sh"
+    networks:
+      - kube_poc
+
+networks:
+  kube_poc:
+    external: true
+    name: kube_poc

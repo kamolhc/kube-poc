@@ -1,0 +1,18 @@
+{
+    "repositories": [
+        {
+            "repositoryArn": "arn:aws:ecr:us-east-1:000000000000:repository/kube-poc",
+            "registryId": "000000000000",
+            "repositoryName": "kube-poc",
+            "repositoryUri": "localhost:4510/kube-poc",
+            "createdAt": 1665038814.0,
+            "imageTagMutability": "MUTABLE",
+            "imageScanningConfiguration": {
+                "scanOnPush": false
+            },
+            "encryptionConfiguration": {
+                "encryptionType": "AES256"
+            }
+        }
+    ]
+}
